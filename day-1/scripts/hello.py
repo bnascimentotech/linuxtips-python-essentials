@@ -22,6 +22,7 @@ __license__ = "Unlicense"
 
 import os
 
+# current_language = "pt_BR"
 current_language = os.getenv("LANG", "eu_US")[:5]
 
 msg = "Hello, World!"
@@ -33,6 +34,6 @@ elif current_language == "it_IT":
 elif current_language == "es_SP":
     msg = "Hola, Mundo!"
 elif current_language == "fr_FR":
-    msg = "Bonjour Monde"
+    msg = "Bonjour Monde!"
 
 print(msg)
