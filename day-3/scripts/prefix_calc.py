@@ -25,6 +25,8 @@ operação: sum
 n1: 5
 n2: 4
 9
+
+Os resultados serão salvos em `prefix_calc.log`
 """
 
 __version__ = "0.1.0" 
@@ -32,6 +34,9 @@ __author__ = "Bruno Nascimento"
 __license__ = "Unlicense"
 
 import sys
+import os
+
+from datetime import datetime
 
 # Valida argumentos
 arguments = sys.argv[1:]
@@ -87,4 +92,18 @@ elif operation == "mul":
 elif operation == "div":
     result = n1 / n2
 
+# Escreve o arquivo de log
+path = os.curdir
+filepath = os.path.join(path, "prefix_calc.log")
+timestamp = datetime.now().isoformat()
+user = os.getenv("USER", "Anonymous")
+
+# Com with
+with open(filepath, "a") as logfile:
+   logfile.write(f"{timestamp} - {user} - {operation}, {n1}, {n2} = {result}\n")
+
+# Com print
+# print(f"{timestamp} - {user} - {operation}, {n1}, {n2} = {result}\n", file=open(filepath, "a"))
+
+# Exibe o resultado
 print(f"O resultado é {result}")
