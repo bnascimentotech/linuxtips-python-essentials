@@ -41,7 +41,6 @@ from datetime import datetime
 # Valida argumentos
 arguments = sys.argv[1:]
 
-# TODO: Utilizar exceptions
 if not arguments: # Se o usuário não inputar parâmetros
     operation = input("operação: ")
     n1 = input("n1: ")
@@ -78,7 +77,11 @@ for num in nums:
     
     validated_nums.append(num)
 
-n1, n2 = validated_nums
+try:
+    n1, n2 = validated_nums
+except:
+    print({str(e)})
+    sys.exit(1)
 
 # Executa operação
 
@@ -92,18 +95,19 @@ elif operation == "mul":
 elif operation == "div":
     result = n1 / n2
 
+# Exibe o resultado na tela
+print(f"O resultado é {result}")
+
 # Escreve o arquivo de log
 path = os.curdir
 filepath = os.path.join(path, "prefix_calc.log")
 timestamp = datetime.now().isoformat()
 user = os.getenv("USER", "Anonymous")
 
-# Com with
-with open(filepath, "a") as logfile:
-   logfile.write(f"{timestamp} - {user} - {operation}, {n1}, {n2} = {result}\n")
-
-# Com print
-# print(f"{timestamp} - {user} - {operation}, {n1}, {n2} = {result}\n", file=open(filepath, "a"))
-
-# Exibe o resultado
-print(f"O resultado é {result}")
+try:
+    with open(filepath, "a") as logfile:
+        logfile.write(f"{timestamp} - {user} - {operation}, {n1}, {n2} = {result}\n")
+except PermissionError as e:
+    # TODO: logging
+    print({str(e)})
+    sys.exit(1)

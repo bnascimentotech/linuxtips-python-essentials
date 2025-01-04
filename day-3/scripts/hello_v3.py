@@ -31,10 +31,23 @@ arguments = {"lang": None,"count": 1}
 
 for arg in sys.argv[1:]:
     
-    # TODO: Tratar ValueError
-    key, value = arg.split("=")
-    key = key.lstrip("-").strip() # Remove hifens hifens à esquerda e espaços antes/depois da chave
+    # ValueError - Com LBYL
+    # if "=" in arg:
+    #     key, value = arg.split("=")
+    # else:
+    #     print("Use `--key=value` to enter arguments.")
+    #     sys.exit(1)
 
+    # ValueError - Com EAFP
+    try:
+        key, value = arg.split("=")
+    except ValueError as e:
+        print(f"[ERROR] {str(e)}")
+        print(f"You entered {arg}.")
+        print("Use `--key=value` to enter arguments.")        
+        sys.exit(1)
+
+    key = key.lstrip("-").strip() # Remove hifens hifens à esquerda e espaços antes/depois da chave
     value = value.strip() # Remove espaços antes/depois do valor
 
     if key not in arguments:
@@ -56,14 +69,32 @@ if current_language is None:
 current_language = current_language[:5]
 
 msg = {
-    # "en_US": "Hello World!",
     "C.UTF": "Hello World!", # Inglês no WSL2
+    "en_US": "Hello World!",    
     "pt_BR": "Olá, Mundo!",
     "it_IT": "Ciao, Mondo!",
     "es_SP": "Hola, Mundo!",
     "fr_FR": "Bonjour Monde!"
 }
 
+# LBYL
+# if current_language in msg:
+#     message = msg[current_language]
+# else:
+#     print(f"Language is invalid, choose from {list(msg.keys())}")
+#     sys.exit(1)
+
+# `try` com valor default
+# message = msg.get(current_language, msg["C.UTF"])
+
+# EAFP - Melhor do que opção acima porque define erro para o usuário.
+try:
+    message = msg[current_language]
+except KeyError as e:
+    print(f"[ERROR] {str(e)}")
+    print(f"Language is invalid, choose from {list(msg.keys())}")
+    sys.exit(1)
+
 print(
-    msg[current_language] * int(arguments["count"])
+    message * int(arguments["count"])
 )
