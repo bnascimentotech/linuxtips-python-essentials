@@ -20,41 +20,54 @@ Execução:
     ou
     ./hello.py    
 """
-__version__ = "0.1.3" 
+__version__ = "0.1.4" 
 __author__ = "Bruno Nascimento"
 __license__ = "Unlicense"
 
 import os
 import sys
+import logging
+
+log_level = os.getenv("LOG_LEVEL", "WARNING").upper()
+
+# Nossa instância
+log = logging.Logger("logs.py", log_level)
+
+# Level
+ch = logging.StreamHandler()
+ch.setLevel(log_level)
+
+# Formatação
+fmt = logging.Formatter(
+    '%(asctime)s %(name)s %(levelname)s '
+    'l:%(lineno)d f:%(filename)s: %(message)s'
+)
+ch.setFormatter(fmt)
+
+# Destino
+log.addHandler(ch)
 
 arguments = {"lang": None,"count": 1}
 
 for arg in sys.argv[1:]:
-    
-    # ValueError - Com LBYL
-    # if "=" in arg:
-    #     key, value = arg.split("=")
-    # else:
-    #     print("Use `--key=value` to enter arguments.")
-    #     sys.exit(1)
-
-    # ValueError - Com EAFP
     try:
         key, value = arg.split("=")
     except ValueError as e:
-        print(f"[ERROR] {str(e)}")
-        print(f"You entered {arg}.")
-        print("Use `--key=value` to enter arguments.")        
+        log.error(
+            "You need to use `=`, you used %s, try --key=value: %s",
+            arg,
+            str(e)
+        )
         sys.exit(1)
 
-    key = key.lstrip("-").strip() # Remove hifens hifens à esquerda e espaços antes/depois da chave
-    value = value.strip() # Remove espaços antes/depois do valor
+    key = key.lstrip("-").strip()
+    value = value.strip()
 
     if key not in arguments:
         print(f"Invalid Option `{key}`")
         sys.exit()
     
-    arguments[key] = value # Se validações acima estiverem Ok atribui valores às chaves
+    arguments[key] = value
 
 current_language = arguments["lang"]
 
@@ -77,17 +90,6 @@ msg = {
     "fr_FR": "Bonjour Monde!"
 }
 
-# LBYL
-# if current_language in msg:
-#     message = msg[current_language]
-# else:
-#     print(f"Language is invalid, choose from {list(msg.keys())}")
-#     sys.exit(1)
-
-# `try` com valor default
-# message = msg.get(current_language, msg["C.UTF"])
-
-# EAFP - Melhor do que opção acima porque define erro para o usuário.
 try:
     message = msg[current_language]
 except KeyError as e:
