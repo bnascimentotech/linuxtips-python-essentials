@@ -38,76 +38,83 @@ import os
 
 from datetime import datetime
 
-# Valida argumentos
-arguments = sys.argv[1:]
+while True:
 
-if not arguments: # Se o usuário não inputar parâmetros
-    operation = input("operação: ")
-    n1 = input("n1: ")
-    n2 = input("n2: ")
-    arguments = [operation, n1, n2]
-elif len(arguments) != 3: # Valida a existência de 3 argumentos
-    print("Número de argumentos inválidos. Digite 3 argumentos no formato: `operação n1 n2`.")
-    print("Exemplo: `sum 5 5`")
-    sys.exit(1)
+    # Valida argumentos
+    arguments = sys.argv[1:]
 
-operation, *nums = arguments
-
-# Valida operações
-valid_operations = ("sum", "sub", "mul", "div")
-
-if operation not in valid_operations:
-    print("Operação inválida. Selecione uma das seguintes operações:")
-    print(valid_operations)
-    sys.exit(1)
-
-validated_nums = []
-
-# Valida números
-for num in nums:
-
-    # TODO: Utilizar while + tratamento exceptions
-    if not num.replace(".", "").isdigit():
-        print(f"Número inválido {num}")
+    if not arguments: # Se o usuário não inputar parâmetros
+        operation = input("operação: ")
+        n1 = input("n1: ")
+        n2 = input("n2: ")
+        arguments = [operation, n1, n2]
+    elif len(arguments) != 3: # Valida a existência de 3 argumentos
+        print("Número de argumentos inválidos. Digite 3 argumentos no formato: `operação n1 n2`.")
+        print("Exemplo: `sum 5 5`")
         sys.exit(1)
-    if "." in num:
-        num = float(num)
-    else:
-        num = int(num)
-    
-    validated_nums.append(num)
 
-try:
-    n1, n2 = validated_nums
-except:
-    print({str(e)})
-    sys.exit(1)
+    operation, *nums = arguments
 
-# Executa operação
+    # Valida operações
+    valid_operations = ("sum", "sub", "mul", "div")
 
-# TODO: Usar dicionário de funções
-if operation == "sum":
-    result = n1 + n2
-elif operation == "sub":
-    result = n1 - n2
-elif operation == "mul":
-    result = n1 * n2
-elif operation == "div":
-    result = n1 / n2
+    if operation not in valid_operations:
+        print("Operação inválida. Selecione uma das seguintes operações:")
+        print(valid_operations)
+        sys.exit(1)
 
-# Exibe o resultado na tela
-print(f"O resultado é {result}")
+    validated_nums = []
 
-# Escreve o arquivo de log
-path = os.curdir
-filepath = os.path.join(path, "prefix_calc.log")
-timestamp = datetime.now().isoformat()
-user = os.getenv("USER", "Anonymous")
+    # Valida números
+    for num in nums:
 
-try:
-    with open(filepath, "a") as logfile:
-        logfile.write(f"{timestamp} - {user} - {operation}, {n1}, {n2} = {result}\n")
-except PermissionError as e:
-    # TODO: logging
-    print({str(e)})
-    sys.exit(1)
+        # TODO: Utilizar while + tratamento exceptions
+        if not num.replace(".", "").isdigit():
+            print(f"Número inválido {num}")
+            sys.exit(1)
+        if "." in num:
+            num = float(num)
+        else:
+            num = int(num)
+        
+        validated_nums.append(num)
+
+    try:
+        n1, n2 = validated_nums
+    except:
+        print({str(e)})
+        sys.exit(1)
+
+    # Executa operação
+
+    # TODO: Usar dicionário de funções
+    if operation == "sum":
+        result = n1 + n2
+    elif operation == "sub":
+        result = n1 - n2
+    elif operation == "mul":
+        result = n1 * n2
+    elif operation == "div":
+        result = n1 / n2
+
+    # Exibe o resultado na tela
+    print(f"O resultado é {result}")
+
+    # Escreve o arquivo de log
+    path = os.curdir
+    filepath = os.path.join(path, "prefix_calc.log")
+    timestamp = datetime.now().isoformat()
+    user = os.getenv("USER", "Anonymous")
+
+    try:
+        with open(filepath, "a") as logfile:
+            logfile.write(
+                f"{timestamp} - {user} - {operation}, {n1}, {n2} = {result}\n"
+            )
+    except PermissionError as e:
+        # TODO: logging
+        print({str(e)})
+        sys.exit(1)
+
+    if input("Pressione Enter para continuar ou qualquer tecla para sair."):
+        break

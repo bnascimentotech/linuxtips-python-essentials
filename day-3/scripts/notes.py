@@ -34,25 +34,41 @@ if arguments[0] not in cmds:
     print(f"Invalid command {arguments[0]}.")
     sys.exit(1)
 
-# Leitura de notas        
-if arguments[0] == "read":
-    for line in open(filepath):
-        title, tag, text = line.split("\t")
-        
-        if tag.lower() == arguments[1].lower():
-            print(f"Title: {title}")
-            print(f"Text: {text}")
-            print("-" * 30)
-            print()
+while True:
 
-# Criação de nova nota
-if arguments[0] == "new":
-    title = arguments[1]  # TODO: Tratar exception
-    text = [
-        f"{title}",
-        input("tag: ").strip(),
-        input("text: \n").strip()
-    ]
-    # \t - tsv (tab separated values)
-    with open(filepath, "a") as note_file:
-        note_file.write("\t".join(text) + "\n")
+    # Leitura de notas        
+    if arguments[0] == "read":
+        try:
+            arg_tag = arguments[1].lower()
+        except IndexError:
+            arg_tag = input("What is the tag? ").strip().lower()
+        
+        for line in open(filepath):
+            title, tag, text = line.split("\t")
+            
+            if tag.lower() == arg_tag:
+                print(f"Title: {title}")
+                print(f"Text: {text}")
+                print("-" * 30)
+                print()
+
+    # Criação de nova nota
+    if arguments[0] == "new":
+        try:
+            title = arguments[1]
+        except IndexError:
+            title = input("What is the title? ").strip().title()
+
+        text = [
+            f"{title}",
+            input("tag: ").strip(),
+            input("text: \n").strip()
+        ]
+        # \t - tsv (tab separated values)
+        with open(filepath, "a") as note_file:
+            note_file.write("\t".join(text) + "\n")
+    
+    cont = input(f"Would you like to continue add/read-ing notes? [n/y]").strip().lower()
+    
+    if cont != "y":
+        break
