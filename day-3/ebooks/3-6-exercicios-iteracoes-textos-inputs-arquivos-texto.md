@@ -36,7 +36,7 @@ temp maior 45: "ALERTA!!! 🥵 Perigo calor extremo"
 
 temp maior que 30 e temp vezes 3 for maior ou igual a umidade:
 
-    "ALERTA!!! 🥵♒ Perigo de calor úmido"
+"ALERTA!!! 🥵♒ Perigo de calor úmido"
 
 temp entre 10 e 30: "😀 Normal"
 
